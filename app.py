@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request
+from flask import Flask,render_template, request, redirect, url_for, session
 
 # 객체생성
 app = Flask(__name__)
@@ -19,8 +19,13 @@ def projects():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        return render_template('contact.html', success=True)
-    return render_template('contact.html', success=False)
+        
+        # 리다이렉트 success 표시
+        session['success'] = True
+        return redirect(url_for('contact'))
+    # get요청시 success 표시 후 초기화
+    success = session.pop('success', False)
+    return render_template('contact.html', success=success)
 
 
 if __name__ == '__main__':
